@@ -1,0 +1,392 @@
+{%- include 'style_mp_section' -%}
+{%- if section.settings.section_bg_color != blank -%}
+<style type="text/css">#shopify-section-{{section.id}} {background-color: {{section.settings.section_bg_color}}}</style>
+{%- endif -%}
+{%- case section.settings.categories_layout -%}
+   {%- when 'default' -%}
+      {%- assign layout = "categories-style-default" -%}
+   {%- when 'masonry' -%}
+      {%- assign  layout = "categories-style-masonry categories-masonry" -%}
+   {%- when 'masonry_first' -%}
+      {%- assign layout = "categories-style-masonry-first categories-masonry" -%}
+   {%- when 'carousel' -%}
+      {%- assign layout = "categories-style-carousel" -%}
+{%- endcase -%}
+{% assign cat_handle = collection.handle %}
+
+<div class="jas_custom_{{section.id}} jas-sc-wc-categories mt__30 mb__30">
+  {% for link in linklists[cat_handle].links %}
+    <div id="jas-cat-{{ link.handle }}" class="jas-sub-cat-row">
+      <div class="jas-subcat-title"><h3 class="jas-cattitle"><a href="{{ link.handle }}">{{ link.title }}</a></h3></div>
+       <div class="jas-subcats">
+         <div class="jas-row {{ layout }} categories-space-{{ section.settings.space_categories }} mt__30 {%- if section.settings.categories_layout == 'carousel' %} jas-carousel{%- endif -%}"{%- if section.settings.categories_layout == 'carousel' %} data-slick='{"slidesToShow": {{ section.settings.sidetoshow }},"slidesToScroll": 1, "autoplay": {{ section.settings.use_autoplay }}, "autoplaySpeed": {{ section.settings.slider_speed }}000,"rtl": {{ settings.use_rtl }}, "speed": {{ section.settings.speed }}, "infinite": {{section.settings.use_loop}}, "arrows": {{section.settings.use_arrows}},"dots": {{section.settings.use_dots}}, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": {{ section.settings.sidetoshow_first}} }},{"breakpoint": 600,"settings":{"slidesToShow": {{ section.settings.sidetoshow_center}} }},{"breakpoint": 480,"settings":{"slidesToShow": {{ section.settings.sidetoshow_last}} }}]}'{%- endif -%}>
+           {%- if section.settings.categories_layout != 'carousel' %}<div class="jas-col-md-3 jas-item-category hide"></div>{%- endif -%}
+           
+           {%- if linklists[link.handle].links != blank -%}
+             {% for sub_link in linklists[link.handle].links %}
+             {%- assign collection = collections[sub_link.handle] -%}
+             <div class="jas-col-md-{{section.settings.width}} jas-col-sm-{{section.settings.width}} {{ section.settings.categories_design }} jas-col-xs-{{section.settings.mobile_width}} jas-item-category">
+               <div class="jas-cat-content">
+                 <div class="sub-cat-thumb">
+                   <a href="{%- if collection.empty? -%}/admin/collections{%- else -%}{{ collection.url }}{%- endif -%}" class="jas-cat-url">
+                     <div class="jas-cat-thumb">
+                       {%- if collection.image != blank -%}
+                       {%- assign img_url = collection.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                       <img src="{{ collection.image | img_url: '50x50' }}" data-src="{{ img_url }}" data-widths="[157, 270, 303, 370, 377, 670, 570, 720, 900, 1080, 1296, 1512, 1728, 2048]" data-aspectratio="{{ collection.image.aspect_ratio }}"  data-sizes="auto" class="lazyload w__100 attachment-shop_catalog size-shop_catalog" alt="{{collection.image.alt}}" >
+                       <div class="jas-wrap-lazy"></div>
+                       {%- elsif collection.products.first and collection.products.first.featured_image != blank -%}
+                       {%- assign image = collection.products.first.featured_image -%}
+                       {%- assign img_url = image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                       <img src="{{ image | img_url: '50x50' }}" data-src="{{ img_url }}" data-widths="[157, 270, 303, 370, 377, 670, 570, 720, 900, 1080, 1296, 1512, 1728, 2048]" data-aspectratio="{{ image.aspect_ratio }}"  data-sizes="auto" class="lazyload w__100 attachment-shop_catalog size-shop_catalog" alt="{{image.alt}}" >
+                       <div class="jas-wrap-lazy"></div>
+                       {%- else -%}
+                       {%- capture current -%}{%- cycle 1, 2, 3 -%}{%- endcapture -%}
+                       {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                       {%- endif -%}
+                     </div>
+                     {%- if collection != blank and number_of_collection > 1 -%}
+                     <span class="jat-cat-pr-count">{{number_of_collection}} {{ section.settings.categories_count | strip_html }}</span>
+                     {%- endif -%}
+                   </a>
+                 </div>
+                 <div class="hover-subwrap">
+                   <a href="{%- if collection.empty? -%}/admin/collections{%- else -%}{{ collection.url }}{%- endif -%}" class="jas-cat-url-overlay"></a>
+                   <h4>{{ collection.title }}</h4>
+                 </div>
+               </div>
+             </div>
+             {% endfor %}       
+           {%- else -%}
+           	{% assign collection = collections[link.handle] %}
+             {%- for product in collection.products -%}
+                {%- include 'jas_custom_product_loop' -%}
+             {% endfor %}
+           {%- endif -%}
+         </div>
+        </div>
+     </div>
+     <div class="np_clearfix"></div>
+  {%- endfor -%}
+</div>
+
+{% schema %}
+  {
+    "name": "Product Sub Categories",
+    "class": "jas-section type_jas_product_subcategories clearfix",
+    "settings": [
+      {
+        "type": "header",
+        "content": "== General Settings"
+      },
+      {
+        "type": "select",
+        "id": "categories_layout",
+        "options": [
+            {
+               "value": "default",
+               "label": "Default"
+             },
+             {
+               "value": "masonry",
+               "label": "Masonry"
+             },
+             {
+               "value": "masonry_first",
+               "label": "Masonry (with first wide)"
+             },
+             {
+               "value": "carousel",
+               "label": "Carousel"
+             }
+           ],
+           "label": "Layout",
+           "default": "default"
+         },
+         {
+           "type": "select",
+           "id": "categories_design",
+           "options": [
+            {
+               "value": "jas_cat_default",
+               "label": "Default"
+             },
+             {
+               "value": "product-category-gecko",
+               "label": "Gecko"
+             },
+             {
+               "value": "jas_cat_alt",
+               "label": "Alternative"
+             },
+             {
+               "value": "jas_cat_center",
+               "label": "Center title"
+             },
+             {
+               "value": "jas_cat_bottom",
+               "label": "bottom title"
+             }
+           ],
+           "label": "Categories design",
+           "default": "jas_cat_default"
+         },
+         {
+           "type": "select",
+           "id": "space_categories",
+           "options": [
+            {
+               "value": "30",
+               "label": "30"
+             },
+             {
+               "value": "20",
+               "label": "20"
+             },
+             {
+               "value": "10",
+               "label": "10"
+             },
+             {
+               "value": "6",
+               "label": "6"
+             },
+             {
+               "value": "2",
+               "label": "2"
+             },
+             {
+               "value": "0",
+               "label": "0"
+             }
+           ],
+           "label": "Space between categories",
+           "default": "30"
+         },
+      {
+       "type": "header",
+       "content": "== settings Slider ( Only for Carousel layout )"
+      },
+     {
+        "type": "range",
+        "id": "slider_speed",
+        "min": 1,
+        "max": 30,
+        "step": 1,
+        "label": "Autoplay Speed in milliseconds",
+        "unit": "sec",
+        "default": 6
+      },
+      {
+        "type": "checkbox",
+        "id": "use_autoplay",
+        "label": "Use autoplay?",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "use_arrows",
+        "label": "Use Arrows?",
+        "default": true
+      },
+     {
+        "type": "checkbox",
+        "id": "use_dots",
+        "default": false,
+        "label": "Use pagination control?"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_loop",
+        "label": "Use Infinite loop sliding?",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "speed",
+        "min": 100,
+        "max": 1000,
+        "step": 100,
+        "label": "Slide/Fade animation speed",
+        "default": 300
+      },
+      {
+        "type": "range",
+        "id": "sidetoshow",
+        "min": 1,
+        "max": 12,
+        "step": 1,
+        "label": "slides To Show",
+        "default": 4
+      },
+      {
+       "type": "header",
+       "content": "=== breakpoint: 1024"
+      },
+      {
+        "type": "range",
+        "id": "sidetoshow_first",
+        "min": 1,
+        "max": 10,
+        "step": 1,
+        "label": "slides To Show",
+        "default": 3
+      },
+      {
+       "type": "header",
+       "content": "=== breakpoint: 600"
+      },
+      {
+        "type": "range",
+        "id": "sidetoshow_center",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "slides To Show",
+        "default": 2
+      },
+      {
+       "type": "header",
+       "content": "=== breakpoint: 480"
+      },
+      {
+        "type": "range",
+        "id": "sidetoshow_last",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "slides To Show",
+        "default": 2
+      },
+     {
+        "type": "header",
+        "content": "== Design Options"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_container",
+        "label": "Use container?",
+        "default": true
+      },
+      {
+         "type": "select",
+         "id": "width",
+         "options": [
+           {
+             "value": "fd",
+             "label": "20%"
+           },
+           {
+             "value": "3",
+             "label": "25%"
+           },
+           {
+             "value": "4",
+             "label": "33.33333333%"
+           },
+           {
+             "value": "6",
+             "label": "50%"
+           },
+           {
+             "value": "8",
+             "label": "66.66666667%"
+           },
+           {
+             "value": "12",
+             "label": "100%"
+           }
+         ],
+         "label": "== Select column width",
+         "default": "3"
+       },
+       {
+         "type": "select",
+         "id": "mobile_width",
+         "options": [
+          {
+             "value": "3",
+             "label": "25%"
+           },
+           {
+             "value": "4",
+             "label": "33.33333333%"
+           },
+           {
+             "value": "6",
+             "label": "50%"
+           },
+           {
+             "value": "8",
+             "label": "66.66666667%"
+           },
+           {
+             "value": "12",
+             "label": "100%"
+           }
+         ],
+         "label": "== Select column mobile width",
+         "default": "6"
+       },
+      {
+        "type": "color",
+        "id": "section_bg_color",
+        "label": "Background color",
+        "default": "#fff"
+      },
+      {
+        "type": "text",
+        "id": "section_margin_top",
+        "label": "Margin top",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_margin_bottom",
+        "label": "Margin bottom",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_margin_left",
+        "label": "Margin left",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_margin_right",
+        "label": "Margin right",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_padding_top",
+        "label": "Padding top",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_padding_right",
+        "label": "Padding right",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_padding_bottom",
+        "label": "Padding bottom",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_padding_left",
+        "label": "Padding left",
+        "info": "60px"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Collection Sub list",
+        "category": "== Collections"
+      }
+    ]
+  }
+{% endschema %}

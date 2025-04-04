@@ -1,0 +1,21 @@
+<div class="collection_txtblock mt__30 mb__30">
+  {%- if sett_title != blank -%}<h3 class="jas_title_1 pr {{mg_class}} mb__30">{{sett_title}}</h3>{%- endif -%}
+  {%- if sett_title != blank -%}<div class="jas-clist mb__30">{{sett_clist}}</div>{%- endif -%} 
+  {%- if sett_btlink != blank -%}<a href="{{sett_btlink}}" class="jas-view-bt">{{sett_btxt}}</a>{%- endif -%} 
+</div>
+<style type="text/css">
+  .jas-clist a{
+    transition:all 0.4s ease-in-out;
+  }
+  .jas-view-bt{
+    display:inline-block;
+    font-size: 12px;
+    padding: 7px 18px;
+    line-height: 1;
+    border-radius: 14px;
+    transition:all 0.4s ease-in-out;
+  }
+  .jas-view-bt:hover{
+    opacity:0.85;
+  }
+</style>

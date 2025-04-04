@@ -1,0 +1,12 @@
+<div class="page-head pr tc page_brand_bg_image{%- if settings.brand_bg_image != blank %} np-pagehead page_jas_bg_image lazyload{%- endif -%}"{%- if settings.brand_bg_image != blank %} data-bgset="{%- include 'bgset', image: settings.brand_bg_image -%}" data-sizes="auto" data-parent-fit="cover" style="background-image: url({{ settings.brand_bg_image | img_url: '50x50' }});"{%- endif -%}>
+   <div class="jas-container pr">
+      <h1 class="tu cw">{{ page.title }}</h1>
+   </div>
+</div>
+
+<div class="jas-row jas-page jas-npbrands">
+  {%- section 'jas_brands' -%}
+  {%- section 'jas_brand_promotion' -%}
+  {%- section 'jas_newsletter' -%}
+  {%- section 'jas_shipping' -%}
+</div>

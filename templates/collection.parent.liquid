@@ -1,0 +1,72 @@
+{%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+{%- assign limit = settings.products_per_page | plus:0 -%}
+{%- assign grid_columns = settings.grid_column -%}
+{%- assign grid_columns_mb = '6' -%}
+{%- assign settings_pr_img_size = settings.use_eq_height -%}
+{%- assign show_vendor = settings.show_vendor -%}
+{%- assign pr_style = settings.style -%}
+{%- assign shop_sidebar = settings.shop_sidebar -%}
+{%- assign coll_style = settings.collection_style -%}
+{%- assign use_pagination = settings.use_pagination -%}
+{%- assign section_settings_countdown = settings.sale_countdown -%}
+{%- assign countdown_timer_style = settings.collection_countdown_style -%}
+{%- assign array_metro = ',2,10,18,26,32,40,48,56,64,72,80,' -%}
+{%- assign no_sidebar = true -%}
+{%- assign class_gl = '12' -%}
+
+{%- if settings.use_wishlist -%}{%- include 'nitro-wishlist' -%}{%- endif -%}
+<div class="jas-wc dib w__100 jas-cat-parent" role="main">
+	<div class="{%- if collection.metafields.meta.countdown != blank -%}jas_count_page oh{%- endif %} page-head pr tc{%- if collection.image or settings.collection_bg_image != blank %} lazyload{%- endif -%}"{%- if settings.use_specify_image and collection.image %} data-bgset="{%- include 'bgset', image: collection.image -%}" data-sizes="auto" data-parent-fit="cover" style="background-image: url({{ collection.image | img_url: '50x50' }})"{%- elsif settings.collection_bg_image != blank %} data-bgset="{%- include 'bgset', image: settings.collection_bg_image -%}" data-sizes="auto" data-parent-fit="cover" style="background-image: url({{ settings.collection_bg_image | img_url: '50x50' }});"{%- endif -%}>
+	   {%- if collection.image or settings.collection_bg_image != blank %}<div class="jas-wrap-lazy"></div>{%- endif -%}
+	   <div class="jas-container pr">
+         {% assign cat_handle = collection.handle %}
+         <div class="jas-subcat-list jas-row">
+           <div class="jas-col-md-12 jas-col-xs-12"><h1 class="mb__20 cw">{{ collection.title }}</h1></div>
+            {% for link in linklists[cat_handle].links %}
+               <div class="jas-col-md-4 jas-col-xs-6 cat-menu-list"><a href="#jas-cat-{{ link.handle }}">{{ link.title }}</a></div>
+            {% endfor %}
+         </div>
+	   </div>
+	</div>
+	<div class="jas-container">
+		<div class="jas-filter-wrap pr">
+          <div class="gecko-shop-loader"></div>
+          <div class="jas-row">
+              {%- section 'jas_product_subcategories' -%}
+          </div>
+		</div>
+	</div>
+    <div class="shopify-section jas-section type_jas_sales_banner clearfix"> 
+  <div class="jas_custom_{{collection.handle}} jas-sales-banner jas-full">
+    <div class="jas-row categories-style-default categories-space-6">
+      <div class="jas-col-md-3 jas-item-category hide"></div>
+      <div class="jas-col-md-6 jas-col-sm-6  jas-col-xs-12 jas-item-category">
+        <div class="jas-promotion oh pr jas_border_img_banner top center">
+          <div class="jas_banner_img">
+            <img src="{{ collection.metafields.sales["weekly_sales_imgurl"] }}" class="lazyload ts__05 w__100 attachment-shop_catalog size-shop_catalog" >
+            <div class="jas-wrap-lazy"></div>
+          </div>
+          <div class="pa">
+            <h3 class="fwm fs__24 mg__0 mb__10 ls__1 lh__1">Weekly SALE</h3>
+            <h5 class="mg__0">{% if collection.metafields.sales["weekly_sales_link"] != blank %}<a href="{{ collection.metafields.sales["weekly_sales_link"] }}">{% endif %} {{ collection.metafields.sales["weekly_sales_linktxt"] }} <i class="fa fa-angle-double-right" aria-hidden="true"></i>{% if collection.metafields.sales["weekly_sales_link"] != blank %}</a>{% endif %}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="jas-col-md-6 jas-col-sm-6  jas-col-xs-12 jas-item-category">
+        <div class="jas-promotion oh pr jas_border_img_banner top center">
+          <div class="jas_banner_img">
+            <img src="{{ collection.metafields.sales["all_sales_img_url"] }}" class="lazyload ts__05 w__100 attachment-shop_catalog size-shop_catalog" >
+            <div class="jas-wrap-lazy"></div>
+          </div>
+          <div class="pa">
+            <h3 class="fwm fs__24 mg__0 mb__10 ls__1 lh__1">All SALE</h3>
+            <h5 class="mg__0">{% if collection.metafields.sales["all_sales_link"] != blank %}<a href="{{ collection.metafields.sales["all_sales_link"] }}"> {% endif %} {{ collection.metafields.sales["all_sales_linktxt"] }} <i class="fa fa-angle-double-right" aria-hidden="true"></i>{% if collection.metafields.sales["all_sales_link"] != blank %}</a>{% endif %}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    {%- section 'jas_newsletter' -%}
+    {%- section 'jas_shipping' -%}
+</div>

@@ -1,0 +1,188 @@
+{%- include 'style_mp_section' -%}
+<div class="jas-row jas_custom_{{section.id}} jas-banner-parallax gecko-parallax{%- if section.settings.use_background_overlay %} jas_background-overlay{%- endif %}{%- if section.settings.image != blank %} lazyload{%- endif %}"{%- if section.settings.image != blank or section.settings.section_bg_color != blank %} data-bgset="{%- include 'bgset', image: section.settings.image -%}" data-sizes="auto" data-parent-fit="cover" style="{%- if section.settings.section_bg_color != blank -%}background-color: {{section.settings.section_bg_color}};{%- endif -%}{%- if section.settings.image != blank -%}background-image: url('{{ section.settings.image | img_url: '50x50' }}');{%- endif -%}"{%- endif -%}>
+   <div class="clearfix{%- if section.settings.use_container %} jas-container{%- else %} jas-col-xs-12{%- endif -%}">
+      <div class="jas-row">
+         <div class="clearfix mb__20" style="width:100%;">
+          {%- if section.settings.section_title != blank -%}<h3 class="jas_title_1 pr" style="color: {{section.settings.heading_color}}">{{ section.settings.section_title }}</h3>{%- endif -%}
+         </div>
+         {%- if section.blocks.size > 0 -%}
+            {% for block in section.blocks %}
+               <div class="jas-col-md-{{block.settings.width}} jas-col-sm-4 jas-col-xs-6">
+                  <div class="jas-brands-item mb__30">
+                    {%- if block.settings.logo_image != blank -%}{%- if block.settings.brand_url != blank -%}<a href="{{block.settings.brand_url}}" target="_blank">{%- endif -%}<img src="{{ block.settings.logo_image | img_url: '' }}">{%- if block.settings.brand_url != blank -%}</a>{%- endif -%}{%- endif -%}
+                  </div>
+               </div>
+            {%- endfor -%}
+         {%- endif -%}
+         {%- if section.blocks.size == 0 -%}
+          {%- include 'no-blocks' -%}
+         {%- endif -%}
+      </div>
+   </div>
+</div>
+{% schema %}
+  {
+    "name": "Brands Info",
+    "class": "jas-section type_jas_shipping clearfix",
+    "settings": [
+     {
+        "type": "header",
+        "content": "== General Settings"
+      },
+      {
+        "type": "text",
+        "id": "section_title",
+        "label": "Heading"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#9e9e9e"
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Background Image"
+      },
+      {
+        "type": "color",
+        "id": "section_bg_color",
+        "label": "Background color"
+      },
+     {
+        "type": "header",
+        "content": "== Design Options"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_container",
+        "label": "Use container?",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "section_margin_top",
+        "label": "Margin top",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_margin_bottom",
+        "label": "Margin bottom",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_margin_left",
+        "label": "Margin left",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_margin_right",
+        "label": "Margin right",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_padding_top",
+        "label": "Padding top",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_padding_right",
+        "label": "Padding right",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_padding_bottom",
+        "label": "Padding bottom",
+        "default":"30px",
+        "info": "60px"
+      },
+      {
+        "type": "text",
+        "id": "section_padding_left",
+        "label": "Padding left",
+        "info": "60px"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "brand_logos",
+        "name": "Brand logo",
+        "settings": [
+            {
+           "type": "select",
+           "id": "width",
+           "options": [
+            {
+               "value": "2",
+               "label": "16.6666667%"
+             },
+            {
+               "value": "3",
+               "label": "25%"
+             },
+             {
+               "value": "4",
+               "label": "33.33333333%"
+             },
+             {
+               "value": "6",
+               "label": "50%"
+             },
+             {
+               "value": "8",
+               "label": "66.66666667%"
+             },
+             {
+               "value": "12",
+               "label": "100%"
+             }
+           ],
+           "label": "== Select column width",
+           "default": "3"
+         },
+          {
+            "type": "header",
+            "content": "== Brand logo"
+          },
+          {
+            "type": "image_picker",
+            "id": "logo_image",
+            "label": "Logo Image"
+          },
+          {
+            "id": "brand_url",
+            "type": "url",
+            "label": "Brand Link"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Brands Info",
+        "category": "== Brand",
+        "blocks": [
+          {
+            "type": "brand_logos"
+          },
+          {
+            "type": "brand_logos"
+          },
+          {
+            "type": "brand_logos"
+          },
+          {
+            "type": "brand_logos"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
