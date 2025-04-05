@@ -1807,7 +1807,6 @@
           "1573705173948",
           "1573705187444"
         ],
-        "disabled": true,
         "settings": {
           "title": "Shop By Department",
           "sub_title": "",
@@ -2122,9 +2121,8 @@
           "1575524962771",
           "1575524973025"
         ],
-        "disabled": true,
         "settings": {
-          "title": "Top Brands-new",
+          "title": "Top Brands",
           "sub_title": "",
           "style_title": "1",
           "slider_speed": 6,
